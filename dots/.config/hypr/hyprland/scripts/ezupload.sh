@@ -44,7 +44,7 @@ printf '%s' "$link" | wl-copy
 if [[ "$(file -b --mime-type "$file")" == image/* ]]; then
     thumb="/tmp/ezupload-thumb.png"
     cp -f "$file" "$thumb" 2>/dev/null
-    notify-send "Screenshot uploaded — URL copied" "$link" -a "$app" -i "$thumb"
+    notify-send "Screenshot uploaded" "$link" -a "$app" -i "$thumb"
 else
-    notify-send "Recording uploaded — URL copied" "$link" -a "$app"
+    notify-send "Recording uploaded" "$link" -a "$app"
 fi
