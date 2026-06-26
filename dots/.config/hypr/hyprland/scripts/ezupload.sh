@@ -35,11 +35,16 @@ fi
 
 printf '%s' "$link" | wl-copy
 
-# This notif daemon treats -i as an image PATH, not an icon name. For images, pass
-# the file itself (nice thumbnail). For video etc. there's no loadable image, so omit
-# -i and put a keyword ("recording") in the summary -> the daemon picks a glyph.
+# This notif daemon treats -i as an image PATH (loaded async), not an icon name.
+# Callers delete the capture right after we return, so point the thumbnail at a stable
+# copy instead of the soon-gone source. Video has no loadable image -> omit -i and let
+# the "recording" keyword in the summary pick a glyph.
+# ponytail: single fixed thumb path; a rapid second upload overwrites it (old notif then
+# shows the newer image). Use a unique temp if that ever matters.
 if [[ "$(file -b --mime-type "$file")" == image/* ]]; then
-    notify-send "Screenshot uploaded — URL copied" "$link" -a "$app" -i "$file"
+    thumb="/tmp/ezupload-thumb.png"
+    cp -f "$file" "$thumb" 2>/dev/null
+    notify-send "Screenshot uploaded — URL copied" "$link" -a "$app" -i "$thumb"
 else
     notify-send "Recording uploaded — URL copied" "$link" -a "$app"
 fi
