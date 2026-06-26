@@ -35,11 +35,11 @@ fi
 
 printf '%s' "$link" | wl-copy
 
-# Use the file itself as the icon only for images (nice thumbnail); mp4 etc. can't
-# load as an image and render as a broken-texture placeholder, so use a stock icon.
+# This notif daemon treats -i as an image PATH, not an icon name. For images, pass
+# the file itself (nice thumbnail). For video etc. there's no loadable image, so omit
+# -i and put a keyword ("recording") in the summary -> the daemon picks a glyph.
 if [[ "$(file -b --mime-type "$file")" == image/* ]]; then
-    icon="$file"
+    notify-send "Screenshot uploaded — URL copied" "$link" -a "$app" -i "$file"
 else
-    icon="video-x-generic"
+    notify-send "Recording uploaded — URL copied" "$link" -a "$app"
 fi
-notify-send "Uploaded — URL copied" "$link" -a "$app" -i "$icon"
