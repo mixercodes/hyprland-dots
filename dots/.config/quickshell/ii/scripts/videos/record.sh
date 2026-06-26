@@ -50,12 +50,14 @@ if pgrep wf-recorder > /dev/null; then
     notify-send "Recording Stopped" "Stopped" -a 'Recorder' &
     pkill wf-recorder &
 else
+    # Name the output file once so notify, wf-recorder and the upload all agree.
+    OUTFILE="recording_$(getdate).mp4"
     if [[ $FULLSCREEN_FLAG -eq 1 ]]; then
-        notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'Recorder' & disown
+        notify-send "Starting recording" "$OUTFILE" -a 'Recorder' & disown
         if [[ $SOUND_FLAG -eq 1 ]]; then
-            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --audio="$(getaudiooutput)"
+            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f "./$OUTFILE" -t --audio="$(getaudiooutput)"
         else
-            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t
+            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f "./$OUTFILE" -t
         fi
     else
         # If a manual region was provided via --region, use it; otherwise run slurp as before.
@@ -68,11 +70,14 @@ else
             fi
         fi
 
-        notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'Recorder' & disown
+        notify-send "Starting recording" "$OUTFILE" -a 'Recorder' & disown
         if [[ $SOUND_FLAG -eq 1 ]]; then
-            wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region" --audio="$(getaudiooutput)"
+            wf-recorder --pixel-format yuv420p -f "./$OUTFILE" -t --geometry "$region" --audio="$(getaudiooutput)"
         else
-            wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region"
+            wf-recorder --pixel-format yuv420p -f "./$OUTFILE" -t --geometry "$region"
         fi
     fi
+
+    # Recording stopped (toggled off) -> upload it; the URL lands on the clipboard.
+    [[ -s "$RECORDING_DIR/$OUTFILE" ]] && "$HOME/.config/hypr/hyprland/scripts/ezupload.sh" "$RECORDING_DIR/$OUTFILE"
 fi

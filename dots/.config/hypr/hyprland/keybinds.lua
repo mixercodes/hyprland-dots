@@ -93,13 +93,15 @@ hl.bind("SUPER + SHIFT + ALT + R", hl.dsp.exec_cmd(qsScripts .. "/videos/record.
     { locked = true, description = "Utilities: Record screen (with sound)" })
 --# Fullscreen screenshot
 local grimhyprctl = "grim -o \"$(hyprctl activeworkspace -j | jq -r '.monitor')\""
-hl.bind("Print", hl.dsp.exec_cmd(grimhyprctl .. " - | wl-copy"),
-    { locked = true, description = "Utilities: Screenshot >> clipboard" })
+local ezUpload = hyprScripts .. "/ezupload.sh"
+hl.bind("Print", hl.dsp.exec_cmd(
+    "f=\"$(mktemp --suffix=.png)\" && " .. grimhyprctl .. " \"$f\" && " .. ezUpload .. " \"$f\"; rm -f \"$f\""),
+    { locked = true, description = "Utilities: Screenshot >> upload (URL to clipboard)" })
 hl.bind("CTRL + Print", hl.dsp.exec_cmd(
     "mkdir -p $(xdg-user-dir PICTURES)/Screenshots && " ..
-    grimhyprctl .. " $(xdg-user-dir PICTURES)/Screenshots/Screenshot_\"$(date '+%Y-%m-%d_%H.%M.%S')\".png"
-), { locked = true, non_consuming = true, description = "Utilities: Screenshot >> clipboard & file" })
-hl.bind("CTRL + Print", hl.dsp.exec_cmd(grimhyprctl .. " - | wl-copy"), { locked = true, non_consuming = true })
+    "f=\"$(xdg-user-dir PICTURES)/Screenshots/Screenshot_$(date '+%Y-%m-%d_%H.%M.%S').png\" && " ..
+    grimhyprctl .. " \"$f\" && " .. ezUpload .. " \"$f\""
+), { locked = true, non_consuming = true, description = "Utilities: Screenshot >> file + upload" })
 --# AI
 hl.bind("SUPER + SHIFT + ALT + mouse:273", hl.dsp.exec_cmd(hyprScripts .. "/ai/primary-buffer-query.sh"),
     { description = "Utilities: Generate AI summary for selected text" })

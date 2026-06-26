@@ -40,12 +40,13 @@ Singleton {
         const uploadAndGetUrl = (filePath) => {
             return `curl -sF files[]=@'${StringUtils.shellSingleQuoteEscape(filePath)}' ${root.fileUploadApiEndpoint} | jq -r '.files[0].url'`
         }
+        const ezUpload = `"$HOME/.config/hypr/hyprland/scripts/ezupload.sh"`
         const annotationCommand = `${Config.options.regionSelector.annotation.useSatty ? "satty" : "swappy"} -f -`;
         switch (action) {
             case ScreenshotAction.Action.Copy:
                 if (saveDir === "") {
-                    // not saving the screenshot, just copy to clipboard
-                    return ["bash", "-c", `${cropToStdout} | wl-copy && ${cleanup}`]
+                    // not saving the screenshot: crop in place, upload, URL lands on the clipboard
+                    return ["bash", "-c", `${cropInPlace} && ${ezUpload} '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'; ${cleanup}`]
                     break;
                 }
                 return [
@@ -53,7 +54,8 @@ Singleton {
                     `mkdir -p '${StringUtils.shellSingleQuoteEscape(saveDir)}' && \
                     saveFileName="screenshot-$(date '+%Y-%m-%d_%H.%M.%S').png" && \
                     savePath="${saveDir}/$saveFileName" && \
-                    ${cropToStdout} | tee >(wl-copy) > "$savePath" && \
+                    ${cropToStdout} > "$savePath" && \
+                    ${ezUpload} "$savePath" && \
                     ${cleanup}`
                 ]
 
