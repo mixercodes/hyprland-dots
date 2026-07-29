@@ -11,10 +11,6 @@ local customScripts = "$HOME/.config/hypr/custom/scripts"
 hl.bind("SUPER + SHIFT + Q", hl.dsp.exec_cmd(customScripts .. "/qr-clip.sh"),
 	{ description = "Utilities: Clipboard >> QR code" })
 
--- Upload the clipboard itself. The Print binds only ever upload captures.
-hl.bind("SUPER + SHIFT + U", hl.dsp.exec_cmd(customScripts .. "/ezclip.sh"),
-	{ description = "Utilities: Upload clipboard >> URL to clipboard" })
-
 -- Read a QR that is on screen. pidof guard matches the other slurp binds.
 hl.bind("SUPER + ALT + Q", hl.dsp.exec_cmd("pidof slurp || " .. customScripts .. "/qr-decode.sh"),
 	{ description = "Utilities: Decode QR on screen >> clipboard" })
