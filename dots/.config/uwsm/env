@@ -1,0 +1,5 @@
+# AMD dual-GPU (dGPU RX 6700 XT + Raphael iGPU, display on the iGPU): disable
+# aquamarine multi-GPU explicit sync. Cross-GPU fences (eglDupNativeFenceFDANDROID
+# EGL_BAD_PARAMETER) abort the Hyprland renderer on a DPMS/monitor hotplug.
+# Sourced by uwsm via /bin/sh at login.
+export AQ_MGPU_NO_EXPLICIT=1

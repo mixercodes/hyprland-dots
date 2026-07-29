@@ -36,10 +36,9 @@ Singleton {
     IdleInhibitor {
         id: idleInhibitor
         window: PanelWindow {
-            // Inhibitor requires a "visible" surface
-            // Actually not lol
-            implicitWidth: 0
-            implicitHeight: 0
+            // Inhibitor requires a "visible" surface; Hyprland 0.56 ignores a 0x0 one
+            implicitWidth: 1
+            implicitHeight: 1
             color: "transparent"
             // Just in case...
             anchors {
