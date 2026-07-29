@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
-# Select a screen region holding a QR code, decode it onto the clipboard.
+# Decode a QR code to the clipboard.
+#   qr-decode.sh <image>   decode that file (quickshell region selector passes
+#                          the already-cropped snip here)
+#   qr-decode.sh           no quickshell: fall back to slurp + grim
 set -uo pipefail
 
 app="qr"
+img="${1:-}"
 
-geom="$(slurp 2>/dev/null)" || exit 0 # cancelled
-[[ -z "$geom" ]] && exit 0
+if [[ -n "$img" ]]; then
+    [[ -s "$img" ]] || { notify-send "QR" "Empty or missing image" -a "$app"; exit 1; }
+else
+    geom="$(slurp 2>/dev/null)" || exit 0 # cancelled
+    [[ -z "$geom" ]] && exit 0
+    img="$(mktemp --suffix=.png)"
+    grim -g "$geom" "$img" 2>/dev/null
+    trap 'rm -f "$img"' EXIT
+fi
 
-text="$(grim -g "$geom" - 2>/dev/null | zbarimg --quiet --raw - 2>/dev/null)"
+text="$(zbarimg --quiet --raw -- "$img" 2>/dev/null)"
 text="${text%$'\n'}"
 
 if [[ -z "$text" ]]; then

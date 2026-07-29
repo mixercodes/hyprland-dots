@@ -19,7 +19,8 @@ Singleton {
         Search,
         CharRecognition,
         Record,
-        RecordWithSound
+        RecordWithSound,
+        QrDecode
     }
 
     property string imageSearchEngineBaseUrl: Config.options.search.imageSearch.imageSearchEngineBaseUrl
@@ -41,6 +42,7 @@ Singleton {
             return `curl -sF files[]=@'${StringUtils.shellSingleQuoteEscape(filePath)}' ${root.fileUploadApiEndpoint} | jq -r '.files[0].url'`
         }
         const ezUpload = `"$HOME/.config/hypr/hyprland/scripts/ezupload.sh"`
+        const qrDecode = `"$HOME/.config/hypr/custom/scripts/qr-decode.sh"`
         const annotationCommand = `${Config.options.regionSelector.annotation.useSatty ? "satty" : "swappy"} -f -`;
         switch (action) {
             case ScreenshotAction.Action.Copy:
@@ -74,6 +76,10 @@ Singleton {
                 break;
             case ScreenshotAction.Action.RecordWithSound:
                 return ["bash", "-c", `${Directories.recordScriptPath} --region '${slurpRegion}' --sound`]
+                break;
+            case ScreenshotAction.Action.QrDecode:
+                // Decode logic lives in the script so the slurp fallback path shares it.
+                return ["bash", "-c", `${cropInPlace} && ${qrDecode} '${StringUtils.shellSingleQuoteEscape(screenshotPath)}'; ${cleanup}`]
                 break;
             default:
                 console.warn("[Region Selector] Unknown snip action, skipping snip.");
