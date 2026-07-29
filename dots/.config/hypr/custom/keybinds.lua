@@ -4,24 +4,6 @@ hl.bind(
 	{ description = "Edit user keybinds" }
 )
 
-local customScripts = "$HOME/.config/hypr/custom/scripts"
-
--- Clipboard >> QR code. ezupload.sh already leaves its URL on the clipboard,
--- so screenshot -> upload -> QR hands a link to a phone without typing it.
-hl.bind("SUPER + SHIFT + Q", hl.dsp.exec_cmd(customScripts .. "/qr-clip.sh"),
-	{ description = "Utilities: Clipboard >> QR code" })
-
--- Read a QR that is on screen, through the rice's own region selector so it
--- looks and behaves like the screenshot and record-region snips.
--- Same two-bind shape as the managed OCR bind: the global drives quickshell,
--- the exec_cmd is the fallback for when quickshell is not running.
-local qsIsAlive = "qs -c $qsConfig ipc call TEST_ALIVE"
-
-hl.bind("SUPER + ALT + Q", hl.dsp.global("quickshell:regionQrDecode"),
-	{ description = "Utilities: Decode QR on screen >> clipboard" })
-hl.bind("SUPER + ALT + Q",
-	hl.dsp.exec_cmd(qsIsAlive .. " || pidof slurp || " .. customScripts .. "/qr-decode.sh"))
-
 local clicking = false
 local INTERVAL = 100 -- ms between clicks -> 10 CPS
 
