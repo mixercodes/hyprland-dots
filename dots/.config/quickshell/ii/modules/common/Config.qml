@@ -551,6 +551,14 @@ Singleton {
                 property string savePath: Directories.videos.replace("file://","") // strip "file://"
             }
 
+            property JsonObject clip: JsonObject {
+                property string savePath: Directories.videos.replace("file://", "") + "/Clips"
+                property int bufferSeconds: 60
+                property int fps: 60
+                property string resolution: "0x0" // 0x0 = native
+                property bool sound: true
+            }
+
             property JsonObject screenSnip: JsonObject {
                 property string savePath: "" // only copy to clipboard when empty
             }

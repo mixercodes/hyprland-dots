@@ -91,6 +91,11 @@ hl.bind("SUPER + ALT + R", hl.dsp.exec_cmd(qsIsAlive .. " || " .. qsScripts .. "
 hl.bind("CTRL + ALT + R", hl.dsp.exec_cmd(qsScripts .. "/videos/record.sh --fullscreen"), { locked = true })
 hl.bind("SUPER + SHIFT + ALT + R", hl.dsp.exec_cmd(qsScripts .. "/videos/record.sh --fullscreen --sound"),
     { locked = true, description = "Utilities: Record screen (with sound)" })
+--# Instant replay
+hl.bind("ALT + F9", hl.dsp.exec_cmd(qsScripts .. "/videos/clip.sh toggle"),
+    { locked = true, description = "Utilities: Instant replay on/off" })
+hl.bind("ALT + F10", hl.dsp.exec_cmd(qsScripts .. "/videos/clip.sh save"),
+    { locked = true, description = "Utilities: Save clip" })
 --# Fullscreen screenshot
 local grimhyprctl = "grim -o \"$(hyprctl activeworkspace -j | jq -r '.monitor')\""
 local ezUpload = hyprScripts .. "/ezupload.sh"

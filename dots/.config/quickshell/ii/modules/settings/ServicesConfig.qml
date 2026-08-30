@@ -111,6 +111,110 @@ ContentPage {
     }
 
     ContentSection {
+        icon: "replay"
+        title: Translation.tr("Instant replay")
+
+        ConfigSpinBox {
+            icon: "timer"
+            text: Translation.tr("Buffer length (seconds)")
+            value: Config.options.clip.bufferSeconds
+            from: 5
+            to: 600
+            stepSize: 5
+            onValueChanged: {
+                Config.options.clip.bufferSeconds = value;
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Resolution")
+            ConfigSelectionArray {
+                currentValue: Config.options.clip.resolution
+                onSelected: newValue => {
+                    Config.options.clip.resolution = newValue;
+                }
+                options: [
+                    {
+                        displayName: Translation.tr("Native"),
+                        value: "0x0"
+                    },
+                    {
+                        displayName: "1440p",
+                        value: "2560x1440"
+                    },
+                    {
+                        displayName: "1080p",
+                        value: "1920x1080"
+                    },
+                    {
+                        displayName: "720p",
+                        value: "1280x720"
+                    },
+                    {
+                        displayName: "480p",
+                        value: "854x480"
+                    }
+                ]
+            }
+        }
+
+        ContentSubsection {
+            title: Translation.tr("Frame rate")
+            ConfigSelectionArray {
+                currentValue: Config.options.clip.fps
+                onSelected: newValue => {
+                    Config.options.clip.fps = newValue;
+                }
+                options: [
+                    {
+                        displayName: "30",
+                        value: 30
+                    },
+                    {
+                        displayName: "60",
+                        value: 60
+                    },
+                    {
+                        displayName: "120",
+                        value: 120
+                    },
+                    {
+                        displayName: "144",
+                        value: 144
+                    },
+                    {
+                        displayName: "240",
+                        value: 240
+                    }
+                ]
+            }
+        }
+
+        ConfigSwitch {
+            text: Translation.tr("Record system audio")
+            checked: Config.options.clip.sound
+            onCheckedChanged: {
+                Config.options.clip.sound = checked;
+            }
+        }
+
+        MaterialTextArea {
+            Layout.fillWidth: true
+            placeholderText: Translation.tr("Clip save path")
+            text: Config.options.clip.savePath
+            wrapMode: TextEdit.Wrap
+            onTextChanged: {
+                Config.options.clip.savePath = text;
+            }
+        }
+
+        NoticeBox {
+            Layout.fillWidth: true
+            text: Translation.tr("Changes apply the next time instant replay is turned on.")
+        }
+    }
+
+    ContentSection {
         icon: "search"
         title: Translation.tr("Search")
 

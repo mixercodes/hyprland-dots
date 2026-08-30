@@ -10,7 +10,7 @@ import qs.modules.ii.overlay
 
 StyledOverlayWidget {
     id: root
-    minimumWidth: 310
+    minimumWidth: 470
     minimumHeight: 130
 
     contentItem: OverlayBackground {
@@ -59,6 +59,24 @@ StyledOverlayWidget {
                     onClicked: {
                         GlobalStates.overlayOpen = false;
                         Quickshell.execDetached([Directories.recordScriptPath, "--fullscreen", "--sound"]);
+                    }
+                }
+
+                BigRecorderButton {
+                    materialSymbol: "replay"
+                    name: "Instant replay on/off"
+                    onClicked: {
+                        GlobalStates.overlayOpen = false;
+                        Quickshell.execDetached([Directories.clipScriptPath, "toggle"]);
+                    }
+                }
+
+                BigRecorderButton {
+                    materialSymbol: "content_cut"
+                    name: "Save clip"
+                    onClicked: {
+                        GlobalStates.overlayOpen = false;
+                        Quickshell.execDetached([Directories.clipScriptPath, "save"]);
                     }
                 }
             }
