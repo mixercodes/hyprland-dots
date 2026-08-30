@@ -3,6 +3,7 @@
 CONFIG_FILE="$HOME/.config/illogical-impulse/config.json"
 LOG="${XDG_RUNTIME_DIR:-/tmp}/gpu-screen-recorder-replay.log"
 PIDFILE="${XDG_RUNTIME_DIR:-/tmp}/gpu-screen-recorder-replay.pid"
+STATEFILE="${XDG_STATE_HOME:-$HOME/.local/state}/gpu-screen-recorder-replay.on"
 
 cfg() {
     local v
@@ -59,6 +60,7 @@ start() {
 
     sleep 1
     if running; then
+        mkdir -p "$(dirname "$STATEFILE")" && touch "$STATEFILE"
         notify "Instant replay on" "Last ${secs}s · ${fps} fps · ${res/0x0/native}"
     else
         notify "Instant replay failed" "$(tail -n 2 "$LOG")"
@@ -72,7 +74,7 @@ stop() {
         return 1
     fi
     kill -INT "$(cat "$PIDFILE")"
-    rm -f "$PIDFILE"
+    rm -f "$PIDFILE" "$STATEFILE"
     notify "Instant replay off" "Buffer discarded"
 }
 
@@ -89,6 +91,7 @@ case "$1" in
     stop) stop ;;
     save) save ;;
     status) running ;;
+    restore) [[ -e "$STATEFILE" ]] && start ;;
     toggle | "")
         if running; then stop; else start; fi
         ;;
