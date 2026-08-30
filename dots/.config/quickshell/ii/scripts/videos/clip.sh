@@ -29,18 +29,6 @@ audio_args() {
     echo "-a default_output"
 }
 
-clip_signal() {
-    case "$(cfg '.clip.clipSeconds' 0)" in
-        10) echo "RTMIN+1" ;;
-        30) echo "RTMIN+2" ;;
-        60) echo "RTMIN+3" ;;
-        300) echo "RTMIN+4" ;;
-        600) echo "RTMIN+5" ;;
-        1800) echo "RTMIN+6" ;;
-        *) echo "USR1" ;;
-    esac
-}
-
 active_monitor() {
     hyprctl monitors -j 2>/dev/null | jq -r '.[] | select(.focused == true) | .name' | head -1
 }
@@ -95,7 +83,7 @@ save() {
         notify "Instant replay" "Turn it on first"
         return 1
     fi
-    kill -"$(clip_signal)" "$(cat "$PIDFILE")"
+    kill -USR1 "$(cat "$PIDFILE")"
 }
 
 case "$1" in
