@@ -127,6 +127,42 @@ ContentPage {
         }
 
         ContentSubsection {
+            title: Translation.tr("Clip length")
+            ConfigSelectionArray {
+                currentValue: Config.options.clip.clipSeconds
+                onSelected: newValue => {
+                    Config.options.clip.clipSeconds = newValue;
+                }
+                options: [
+                    {
+                        displayName: Translation.tr("Whole buffer"),
+                        value: 0
+                    },
+                    {
+                        displayName: "10s",
+                        value: 10
+                    },
+                    {
+                        displayName: "30s",
+                        value: 30
+                    },
+                    {
+                        displayName: "1m",
+                        value: 60
+                    },
+                    {
+                        displayName: "5m",
+                        value: 300
+                    },
+                    {
+                        displayName: "10m",
+                        value: 600
+                    }
+                ]
+            }
+        }
+
+        ContentSubsection {
             title: Translation.tr("Resolution")
             ConfigSelectionArray {
                 currentValue: Config.options.clip.resolution
@@ -210,7 +246,7 @@ ContentPage {
 
         NoticeBox {
             Layout.fillWidth: true
-            text: Translation.tr("Changes apply the next time instant replay is turned on.")
+            text: Translation.tr("Buffer length, resolution and frame rate apply the next time instant replay is turned on. Clip length applies right away.")
         }
     }
 

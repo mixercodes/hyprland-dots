@@ -554,6 +554,7 @@ Singleton {
             property JsonObject clip: JsonObject {
                 property string savePath: Directories.videos.replace("file://", "") + "/Clips"
                 property int bufferSeconds: 60
+                property int clipSeconds: 0 // 0 = whole buffer
                 property int fps: 60
                 property string resolution: "0x0" // 0x0 = native
                 property bool sound: true
